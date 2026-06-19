@@ -68,6 +68,12 @@ actor PersistenceService {
         return allRecords.sorted { $0.timestamp < $1.timestamp }
     }
 
+    /// Registros desde una fecha (inclusive), ordenados cronológicamente.
+    func fetchRecords(since date: Date) async -> [HistoricalRecord] {
+        let daySpan = max(1, Int(ceil(Date().timeIntervalSince(date) / 86_400)))
+        return await fetchRecords(lastDays: daySpan).filter { $0.timestamp >= date }
+    }
+
     // MARK: - Limpieza
 
     /// Elimina archivos de historial con más de N días de antigüedad.

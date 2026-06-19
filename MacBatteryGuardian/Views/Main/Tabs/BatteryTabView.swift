@@ -86,13 +86,15 @@ struct BatteryTabView: View {
 
     private func timelineCard(vm: BatteryViewModel) -> some View {
         MetricCardView(title: "Nivel de batería en el tiempo", icon: "chart.xyaxis.line", iconColor: .green) {
-            TimelineChartView(
-                samples: vm.batteryTimeline,
-                color: .green,
-                yMin: 0,
-                yMax: 100,
-                detailedHeight: chartHeight
+            BatteryLevelTimelineChartView(
+                points: vm.batteryChartPoints,
+                pluggedInIntervals: vm.batteryPluggedInIntervals,
+                chargingIntervals: vm.batteryChargingIntervals,
+                chartHeight: 108
             )
+        }
+        .task {
+            await vm.reloadBatteryChart()
         }
     }
 

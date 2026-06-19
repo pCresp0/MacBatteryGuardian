@@ -28,6 +28,11 @@ final class HistoryRepository: @unchecked Sendable {
         await persistence.fetchRecords(lastDays: days)
     }
 
+    /// Devuelve los registros desde una fecha concreta (p. ej. últimas 12 h).
+    func fetchSince(_ date: Date) async -> [HistoricalRecord] {
+        await persistence.fetchRecords(since: date)
+    }
+
     /// Devuelve los registros de hoy.
     func fetchToday() async -> [HistoricalRecord] {
         await fetchLast(days: 1)

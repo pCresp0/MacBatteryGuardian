@@ -34,11 +34,16 @@ final class BatteryViewModel: ObservableObject {
     @Published private(set) var alertState: ConsumptionAlertState = .stable
     @Published private(set) var alertColor: Color = .green
 
-    /// Nivel de batería en el tiempo (sesión actual).
-    @Published private(set) var batteryTimeline: [TimelineSample] = []
+    /// Cronología de batería (últimas 12 h) con estado de carga.
+    @Published private(set) var batteryChartPoints: [BatteryTimelinePoint] = []
+    @Published private(set) var batteryPluggedInIntervals: [DateInterval] = []
+    @Published private(set) var batteryChargingIntervals: [DateInterval] = []
     /// Consumo %/h en el tiempo (cuando hay dato).
     @Published private(set) var consumptionTimeline: [TimelineSample] = []
     private let maxTimelinePoints = 120
+    private var liveBatteryPoints: [BatteryTimelinePoint] = []
+    private let historyRepository = HistoryRepository.shared
+    private var chartRefreshTask: Task<Void, Never>?
 
     // MARK: - Actualización
 
@@ -117,6 +122,37 @@ final class BatteryViewModel: ObservableObject {
             depletionSentence = nil
         }
 
-        TimelineHistory.append(Double(battery.percentage), to: &batteryTimeline, maxPoints: maxTimelinePoints)
+        appendLiveBatteryPoint(from: battery)
+        scheduleBatteryChartRefresh()
+    }
+
+    func reloadBatteryChart() async {
+        await refreshBatteryChart()
+    }
+
+    // MARK: - Cronología 12 h
+
+    private func appendLiveBatteryPoint(from battery: BatterySnapshot) {
+        liveBatteryPoints.append(BatteryTimelinePoint.from(snapshot: battery))
+        let cutoff = BatteryTimelineChart.windowStart()
+        liveBatteryPoints = liveBatteryPoints.filter { $0.date >= cutoff }
+    }
+
+    private func scheduleBatteryChartRefresh() {
+        chartRefreshTask?.cancel()
+        chartRefreshTask = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(150))
+            guard !Task.isCancelled else { return }
+            await self?.refreshBatteryChart()
+        }
+    }
+
+    private func refreshBatteryChart() async {
+        let cutoff = BatteryTimelineChart.windowStart()
+        let historical = await historyRepository.fetchSince(cutoff)
+        let merged = BatteryTimelineBuilder.merge(historical: historical, live: liveBatteryPoints)
+        batteryChartPoints = merged
+        batteryPluggedInIntervals = BatteryTimelineBuilder.pluggedInIntervals(from: merged)
+        batteryChargingIntervals = BatteryTimelineBuilder.chargingIntervals(from: merged)
     }
 }
