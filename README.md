@@ -217,52 +217,88 @@ Versión actual: **[v1.0.0](https://github.com/pCresp0/MacBatteryGuardian/releas
 
 ### Instalación paso a paso
 
-1. **Descarga** el `.dmg` desde [Releases](https://github.com/pCresp0/MacBatteryGuardian/releases/latest).
-2. **Abre** el DMG (doble clic) y **arrastra** `MacBatteryGuardian` a la carpeta **Aplicaciones**.
-3. **Abre la app** desde Aplicaciones o Spotlight (`⌘Espacio` → "MacBatteryGuardian").
+#### 1. Descarga el DMG
+
+Descarga `MacBatteryGuardian-1.0.0.dmg` desde [Releases](https://github.com/pCresp0/MacBatteryGuardian/releases/latest) (quedará en **Descargas**).
+
+#### 2. Abre el DMG — macOS lo bloqueará la primera vez
+
+Haz **doble clic** en el `.dmg`. Es muy probable que aparezca este aviso:
+
+<p align="center">
+  <img src="docs/screenshots/gatekeeper-dmg-bloqueado.png" alt="Aviso: No se ha abierto MacBatteryGuardian-1.0.0.dmg" width="420"/>
+</p>
+
+> *«No se ha abierto MacBatteryGuardian-1.0.0.dmg»*  
+> *Apple no ha podido verificar que no contenga software malicioso…*
+
+**Pulsa «Aceptar»** (no «Trasladar a la Papelera»). El DMG no se ha abierto todavía; es normal.
+
+#### 3. Ve a Privacidad y seguridad → «Abrir igualmente»
+
+1. Abre **Ajustes del sistema** (icono ⚙️).
+2. Entra en **Privacidad y seguridad**.
+3. Baja hasta la sección **Seguridad**.
+4. Verás: *«Se ha bloqueado MacBatteryGuardian-1.0.0.dmg para proteger tu Mac»*.
+5. Pulsa **Abrir igualmente**.
+
+<p align="center">
+  <img src="docs/screenshots/gatekeeper-abrir-igualmente.png" alt="Ajustes: Abrir igualmente el DMG" width="620"/>
+</p>
+
+6. Confirma con contraseña o Touch ID si macOS te lo pide.
+7. Vuelve a **Descargas** y haz **doble clic** otra vez en el `.dmg` — ahora sí se abrirá.
+
+#### 4. Instala la app
+
+1. Se abrirá una ventana con **MacBatteryGuardian** y un enlace a **Aplicaciones**.
+2. **Arrastra** la app a **Aplicaciones**.
+3. Expulsa el DMG (clic derecho → Expulsar).
+
+#### 5. Abre la app (puede volver a avisar una vez)
+
+Abre **MacBatteryGuardian** desde Aplicaciones. macOS **puede** mostrar el mismo tipo de aviso, pero ahora con el nombre de la **app** (no del DMG).
+
+- **Clic derecho** sobre la app → **Abrir** → **Abrir**, **o**
+- Otra vez **Ajustes → Privacidad y seguridad → Abrir igualmente**.
+
+Solo hace falta **una vez por archivo** (DMG y app). Después abre con doble clic normal.
+
+#### 6. Busca el icono en la barra de menú
+
+La app **no aparece en el Dock**. Mira arriba a la **derecha** en la barra de menú.
 
 ---
 
-### ⚠️ macOS bloquea la app la primera vez (es normal)
+### ¿Por qué sale ese aviso?
 
-Al no estar notarizada con cuenta de Apple Developer de pago, macOS mostrará un aviso del estilo:
+macOS incluye **Gatekeeper**, un sistema de seguridad que comprueba que el software provenga de un **desarrollador verificado por Apple**.
 
-> *«MacBatteryGuardian» no se puede abrir porque no se puede verificar el desarrollador.*  
-> o *Apple no puede comprobar que esta app esté libre de malware.*
+| Qué pasa | Por qué |
+|----------|---------|
+| Bloquea el DMG o la app | MacBatteryGuardian **no está notarizada** con cuenta **Apple Developer de pago** (99 €/año) |
+| Dice «no se puede verificar el desarrollador» | La app está firmada para desarrollo / distribución interna, no con **Developer ID** |
+| Pide ir a Privacidad y seguridad | Es la forma estándar de macOS de decir: *«¿confías tú en este archivo descargado de internet?»* |
 
-**No pasa nada.** La app es open source y no tiene telemetría. Elige **una** de estas opciones:
+**No significa que la app tenga malware.** El código es **open source** en este mismo repositorio; puedes revisarlo. Apple simplemente no puede «avalizarla» sin el proceso de pago.
 
-#### Opción A — Clic derecho (la más fácil)
+Para evitar estos pasos haría falta pagar Apple Developer y **notarizar** el DMG. Para un equipo o uso personal, **Abrir igualmente** es suficiente y seguro si confías en el proyecto.
 
-1. Ve a **Aplicaciones** en Finder.
-2. **Clic derecho** (o Control + clic) sobre **MacBatteryGuardian**.
-3. Pulsa **Abrir**.
-4. En el diálogo, pulsa **Abrir** otra vez.
-5. ✅ Solo hace falta **una vez**; después abre con doble clic normal.
+---
 
-#### Opción B — Ajustes del sistema
+### Atajos si prefieres no usar Ajustes
 
-Si ya intentaste abrirla con doble clic y macOS la bloqueó:
-
-1. Abre **Ajustes del sistema** ( ⚙️ ).
-2. Ve a **Privacidad y seguridad**.
-3. Baja hasta **Seguridad** — verás un mensaje tipo *«MacBatteryGuardian» fue bloqueada…*.
-4. Pulsa **Abrir igualmente** (o **Allow Anyway** en inglés).
-5. Confirma con tu contraseña o Touch ID si te lo pide.
-6. Vuelve a abrir la app desde Aplicaciones.
-
-#### Opción C — Terminal (avanzado)
+**Terminal** (quita la cuarentena de internet del DMG y de la app):
 
 ```bash
+xattr -cr ~/Downloads/MacBatteryGuardian-1.0.0.dmg
+open ~/Downloads/MacBatteryGuardian-1.0.0.dmg
+# Tras instalar en Aplicaciones:
 xattr -cr /Applications/MacBatteryGuardian.app
 open /Applications/MacBatteryGuardian.app
 ```
 
----
-
-### ¿Dónde está la app?
-
-MacBatteryGuardian **no aparece en el Dock**. Tras abrirla, busca el **icono en la barra de menú superior** (junto a Wi‑Fi, batería del sistema, etc.).
+**Clic derecho → Abrir** en la app (desde Aplicaciones), tras haber abierto el DMG.
 
 ---
 
