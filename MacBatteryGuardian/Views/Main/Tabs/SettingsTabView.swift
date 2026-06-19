@@ -84,19 +84,8 @@ struct SettingsTabView: View {
                 }
             }
 
-            // MARK: - Acerca de
-            Section("Acerca de") {
-                LabeledContent("Versión", value: "1.0.0")
-                LabeledContent("Temperatura") {
-                    Text("Batería y estimación del sistema (Apple no publica °C del procesador)")
-                        .foregroundStyle(.secondary)
-                        .font(.caption)
-                }
-                LabeledContent("Velocidad de ventiladores") {
-                    Text("No disponible via APIs públicas")
-                        .foregroundStyle(.secondary)
-                        .font(.caption)
-                }
+            // MARK: - Avanzado
+            Section("Avanzado") {
                 Button(role: .destructive) {
                     showResetAlert = true
                 } label: {

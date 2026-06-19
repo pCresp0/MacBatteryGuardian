@@ -89,6 +89,7 @@ struct MainWindowView: View {
             case .history:  HistoryTabView()
             case .health:   HealthTabView()
             case .settings: SettingsTabView()
+            case .about:    AboutTabView()
             }
         }
     }
@@ -120,6 +121,7 @@ enum AppTab: String, CaseIterable, Identifiable {
     case history  = "history"
     case health   = "health"
     case settings = "settings"
+    case about    = "about"
 
     var id: String { rawValue }
 
@@ -132,6 +134,7 @@ enum AppTab: String, CaseIterable, Identifiable {
         case .history:  return "Histórico"
         case .health:   return "Salud"
         case .settings: return "Ajustes"
+        case .about:    return "Acerca de"
         }
     }
 
@@ -144,6 +147,7 @@ enum AppTab: String, CaseIterable, Identifiable {
         case .history:  return "chart.line.uptrend.xyaxis"
         case .health:   return "heart.text.square"
         case .settings: return "gearshape"
+        case .about:    return "info.circle"
         }
     }
 }

@@ -132,7 +132,27 @@ Uso en GB, presión de memoria, evolución temporal y **desglose segmentado** al
   <img src="docs/screenshots/memory.png" alt="Pestaña Memoria RAM" width="720"/>
 </p>
 
-> También disponibles: **Histórico** (gráficas de días/semanas), **Salud** (índice 0–100 con recomendaciones) y **Ajustes** (configuración completa).
+---
+
+### Pestaña Salud
+
+Índice de salud del Mac (0–100) con desglose por factores: batería, temperatura, CPU, memoria, consumo y tiempo encendido. Incluye recomendaciones cuando algún factor impacta la puntuación.
+
+<p align="center">
+  <img src="docs/screenshots/health.png" alt="Pestaña Salud" width="720"/>
+</p>
+
+---
+
+### Pestaña Ajustes
+
+Configuración completa: inicio automático, barra de menú, intervalo de monitorización, notificaciones, Modo Bajo Consumo automático y retención del historial.
+
+<p align="center">
+  <img src="docs/screenshots/settings.png" alt="Pestaña Ajustes" width="720"/>
+</p>
+
+> También disponibles: **Histórico** (gráficas de días/semanas) y **Acerca de** (autor, licencia MIT y enlaces al repositorio).
 
 ---
 
@@ -161,7 +181,7 @@ El icono muestra:
 
 ### 3. Ventana principal — análisis detallado
 
-Desde el popover o directamente, abre la **ventana completa** con 7 pestañas:
+Desde el popover o directamente, abre la **ventana completa** con 8 pestañas:
 
 | Pestaña | Para qué sirve |
 |---------|----------------|
@@ -172,6 +192,7 @@ Desde el popover o directamente, abre la **ventana completa** con 7 pestañas:
 | **Histórico** | Evolución en el tiempo (hoy / 7 días / 30 días) |
 | **Salud** | Índice de salud del Mac (0–100) y recomendaciones |
 | **Ajustes** | Configuración de la app |
+| **Acerca de** | Autor, licencia MIT, GitHub y enlaces |
 
 **Tip:** en la pestaña General, pulsa **"Abrir ›"** o la propia tarjeta para ir al detalle de esa métrica.
 
@@ -431,7 +452,7 @@ open ~/Library/Developer/Xcode/DerivedData/MacBatteryGuardian-*/Build/Products/D
 Barra de menú (PopoverView)
         │
         ▼
-Ventana principal (7 pestañas SwiftUI)
+Ventana principal (8 pestañas SwiftUI)
         │
         ▼
 ViewModels (@MainActor)
