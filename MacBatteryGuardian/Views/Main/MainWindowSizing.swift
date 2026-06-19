@@ -32,6 +32,21 @@ enum MainWindowSizer {
         return max(320, screen.height * 0.92 - tabBarHeight - titleBar)
     }
 
+    /// Separación entre la barra de menú del sistema y el borde superior de la ventana.
+    static let topInset: CGFloat = 56
+
+    /// Coloca la ventana arriba-centro (estilo app de barra de menú), no en el centro vertical.
+    @MainActor
+    static func windowFrame(totalHeight: CGFloat, on screen: NSScreen) -> NSRect {
+        let visible = screen.visibleFrame
+        let width = windowWidth
+        let maxHeight = visible.height * 0.92
+        let height = min(max(totalHeight, minWindowHeight), maxHeight)
+        let x = visible.origin.x + max(0, (visible.width - width) / 2)
+        let y = visible.maxY - topInset - height
+        return NSRect(x: x, y: y, width: width, height: height)
+    }
+
     static func requestResize(bodyHeight: CGFloat, tab: AppTab, animated: Bool = false) {
         NotificationCenter.default.post(
             name: .mainWindowResizeToContent,

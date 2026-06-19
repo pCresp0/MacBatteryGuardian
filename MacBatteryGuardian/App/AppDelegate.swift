@@ -113,7 +113,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered,
             defer: false
         )
-        window.center()
+        if let screen = NSScreen.main {
+            window.setFrame(
+                MainWindowSizer.windowFrame(totalHeight: MainWindow.defaultSize.height, on: screen),
+                display: false
+            )
+        }
         window.minSize = MainWindow.minSize
         window.contentView = NSHostingView(rootView: contentView)
         window.isReleasedWhenClosed = false
@@ -158,10 +163,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
         let targetFrameHeight = targetContent + titleBar
 
-        var frame = window.frame
-        frame.origin.y += frame.size.height - targetFrameHeight
-        frame.size.height = targetFrameHeight
-        frame.size.width = MainWindowSizer.windowWidth
+        let screen = window.screen ?? NSScreen.main ?? NSScreen.screens[0]
+        let frame = MainWindowSizer.windowFrame(totalHeight: targetFrameHeight, on: screen)
 
         window.minSize = NSSize(width: 800, height: MainWindowSizer.minWindowHeight)
         window.setFrame(frame, display: true, animate: animated)
