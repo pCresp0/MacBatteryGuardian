@@ -114,8 +114,14 @@ final class PopoverViewModel: ObservableObject {
             let minutes = metrics?.estimatedAutonomyMinutes
                 ?? battery.timeToEmptyMinutes.flatMap { $0 > 0 ? $0 : nil }
             autonomySentence = minutes.map { Date.batteryAutonomySentence(minutes: $0) }
-            if metrics?.hasEnoughRateData == true,
-               let depletion = metrics?.estimatedDepletionDate(batteryPercentage: battery.percentage) {
+            let depletion: Date? = {
+                if metrics?.hasEnoughRateData == true,
+                   let fromRate = metrics?.estimatedDepletionDate(batteryPercentage: battery.percentage) {
+                    return fromRate
+                }
+                return minutes.flatMap { Date.batteryDepletionEstimate(fromMinutes: $0) }
+            }()
+            if let depletion {
                 depletionSentence = depletion.batteryDepletionSentence
                 estimatedDepletionLabel = depletion.depletionEstimateFormatted
             } else {

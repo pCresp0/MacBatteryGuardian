@@ -91,6 +91,12 @@ extension Date {
         return "Autonomía: \(hours) \(hourWord) y \(mins) \(minWord)"
     }
 
+    /// Fecha estimada de agotamiento a partir de minutos restantes (IOKit o autonomía calculada).
+    static func batteryDepletionEstimate(fromMinutes minutes: Int) -> Date? {
+        guard minutes > 0 else { return nil }
+        return Date().addingTimeInterval(TimeInterval(minutes * 60))
+    }
+
     /// Frase de agotamiento: "La batería se agotará a las 21:08".
     var batteryDepletionSentence: String {
         let time = shortTimeFormatted

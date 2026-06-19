@@ -96,12 +96,14 @@ final class BatteryViewModel: ObservableObject {
                 let minutes = m.estimatedAutonomyMinutes
                     ?? battery.timeToEmptyMinutes.flatMap { $0 > 0 ? $0 : nil }
                 autonomySentence = minutes.map { Date.batteryAutonomySentence(minutes: $0) }
-                if m.hasEnoughRateData,
-                   let depletion = m.estimatedDepletionDate(batteryPercentage: battery.percentage) {
-                    depletionSentence = depletion.batteryDepletionSentence
-                } else {
-                    depletionSentence = nil
-                }
+                let depletion: Date? = {
+                    if m.hasEnoughRateData,
+                       let fromRate = m.estimatedDepletionDate(batteryPercentage: battery.percentage) {
+                        return fromRate
+                    }
+                    return minutes.flatMap { Date.batteryDepletionEstimate(fromMinutes: $0) }
+                }()
+                depletionSentence = depletion?.batteryDepletionSentence
             } else {
                 autonomySentence = nil
                 depletionSentence = nil
