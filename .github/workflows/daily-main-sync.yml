@@ -1,0 +1,112 @@
+# Sincronización diaria de main → develop y copia de seguridad.
+#
+# Cada día a las 23:50 (Europe/Madrid), si hubo commits en main ese día:
+#   1. Crea la rama backup/YYYY-MM-DD_Ncommits apuntando al HEAD de main.
+#   2. Hace merge de main en develop (sin borrar ramas).
+#
+# workflow_dispatch permite probar manualmente (input force=true omite comprobaciones).
+
+name: Daily main sync
+
+on:
+  schedule:
+    # Se ejecuta cada hora a :50 UTC; el script solo actúa a las 23:50 Europe/Madrid (DST incluido).
+    - cron: '50 * * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Forzar ejecución (ignora hora y commits del día)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-main-sync
+  cancel-in-progress: false
+
+jobs:
+  backup-and-sync-develop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comprobar ventana horaria
+        id: gate
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force }}
+        run: |
+          export TZ=Europe/Madrid
+          NOW="$(date '+%H:%M')"
+          echo "Hora local (Madrid): $NOW"
+          if [ "$FORCE" = "true" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "forced=true" >> "$GITHUB_OUTPUT"
+          elif [ "$NOW" = "23:50" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "forced=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Fuera de ventana (23:50 Europe/Madrid). Nada que hacer."
+          fi
+
+      - name: Checkout completo
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Backup de main y merge en develop
+        if: steps.gate.outputs.run == 'true'
+        env:
+          FORCED: ${{ steps.gate.outputs.forced }}
+        run: |
+          set -euo pipefail
+          export TZ=Europe/Madrid
+
+          TODAY="$(date '+%Y-%m-%d')"
+          DAY_START="${TODAY} 00:00:00"
+          DAY_END="${TODAY} 23:59:59"
+
+          git fetch origin main develop --prune || git fetch origin main --prune
+
+          COMMIT_COUNT="$(git rev-list --count origin/main --since="$DAY_START" --until="$DAY_END" || true)"
+          COMMIT_COUNT="${COMMIT_COUNT:-0}"
+
+          echo "Fecha (Madrid): $TODAY"
+          echo "Commits en main hoy: $COMMIT_COUNT"
+
+          if [ "$COMMIT_COUNT" -eq 0 ] && [ "$FORCED" != "true" ]; then
+            echo "Sin commits en main hoy. Fin."
+            exit 0
+          fi
+
+          if [ "$COMMIT_COUNT" -eq 0 ] && [ "$FORCED" = "true" ]; then
+            COMMIT_COUNT="$(git rev-list --count origin/main || echo 0)"
+            echo "Forzado sin commits del día; usando total main: $COMMIT_COUNT"
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          BACKUP_BRANCH="backup/${TODAY}_${COMMIT_COUNT}commits"
+          echo "Rama de backup: $BACKUP_BRANCH"
+
+          if git ls-remote --exit-code --heads origin "$BACKUP_BRANCH" >/dev/null 2>&1; then
+            echo "La rama $BACKUP_BRANCH ya existe; no se sobrescribe."
+          else
+            git branch "$BACKUP_BRANCH" origin/main
+            git push origin "$BACKUP_BRANCH"
+            echo "Backup creado: $BACKUP_BRANCH"
+          fi
+
+          if git ls-remote --exit-code --heads origin develop >/dev/null 2>&1; then
+            git checkout -B develop origin/develop
+          else
+            echo "Rama develop inexistente; se crea desde main."
+            git checkout -B develop origin/main
+          fi
+
+          git merge origin/main --no-edit -m "chore: sync develop with main (${TODAY}, ${COMMIT_COUNT} commits)"
+          git push origin develop
+          echo "develop sincronizada con main."
