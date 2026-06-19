@@ -74,6 +74,35 @@ extension Date {
         return m == 0 ? "\(h) h" : "\(h) h \(m) min"
     }
 
+    /// Frase completa de autonomía: "Autonomía: 4 horas y 49 minutos".
+    static func batteryAutonomySentence(minutes: Int) -> String {
+        guard minutes > 0 else { return "–" }
+        if minutes < 60 {
+            let unit = minutes == 1 ? "minuto" : "minutos"
+            return "Autonomía: \(minutes) \(unit)"
+        }
+        let hours = minutes / 60
+        let mins = minutes % 60
+        let hourWord = hours == 1 ? "hora" : "horas"
+        if mins == 0 {
+            return "Autonomía: \(hours) \(hourWord)"
+        }
+        let minWord = mins == 1 ? "minuto" : "minutos"
+        return "Autonomía: \(hours) \(hourWord) y \(mins) \(minWord)"
+    }
+
+    /// Frase de agotamiento: "La batería se agotará a las 21:08".
+    var batteryDepletionSentence: String {
+        let time = shortTimeFormatted
+        if Calendar.current.isDateInToday(self) {
+            return "La batería se agotará a las \(time)"
+        }
+        if Calendar.current.isDateInTomorrow(self) {
+            return "La batería se agotará mañana a las \(time)"
+        }
+        return "La batería se agotará el \(shortDateFormatted) a las \(time)"
+    }
+
     /// Etiqueta de tiempo hasta carga completa.
     static func chargeCompleteLabel(minutes: Int) -> String {
         "Carga completa en \(batteryMinutesFormatted(minutes))"

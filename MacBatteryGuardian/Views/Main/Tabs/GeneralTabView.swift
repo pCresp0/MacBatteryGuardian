@@ -77,9 +77,10 @@ struct GeneralTabView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {
-                    Text(battery.autonomyFormatted)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    BatteryAutonomySummaryView(
+                        autonomySentence: battery.autonomySentence,
+                        depletionSentence: battery.depletionSentence
+                    )
                 }
             }
         }

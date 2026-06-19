@@ -16,6 +16,8 @@ final class PopoverViewModel: ObservableObject {
     @Published private(set) var isCharging: Bool = false
     @Published private(set) var isFullyCharged: Bool = false
     @Published private(set) var autonomyFormatted: String = "–"
+    @Published private(set) var autonomySentence: String? = nil
+    @Published private(set) var depletionSentence: String? = nil
     @Published private(set) var consumptionRate: String = "–"
     /// Consumo medio en %/h (media de ventanas temporales).
     @Published private(set) var averageConsumptionRate: String = "–"
@@ -108,20 +110,30 @@ final class PopoverViewModel: ObservableObject {
 
         // Métricas energéticas
         autonomyFormatted = metrics?.estimatedAutonomyFormatted ?? "–"
+        if let battery, !battery.isPluggedIn {
+            let minutes = metrics?.estimatedAutonomyMinutes
+                ?? battery.timeToEmptyMinutes.flatMap { $0 > 0 ? $0 : nil }
+            autonomySentence = minutes.map { Date.batteryAutonomySentence(minutes: $0) }
+            if metrics?.hasEnoughRateData == true,
+               let depletion = metrics?.estimatedDepletionDate(batteryPercentage: battery.percentage) {
+                depletionSentence = depletion.batteryDepletionSentence
+                estimatedDepletionLabel = depletion.depletionEstimateFormatted
+            } else {
+                depletionSentence = nil
+                estimatedDepletionLabel = nil
+            }
+        } else {
+            autonomySentence = nil
+            depletionSentence = nil
+            estimatedDepletionLabel = nil
+        }
+
         consumptionRate = metrics?.currentRatePerHour.map {
             String(format: "%.1f %%/h", $0)
         } ?? "–"
         averageConsumptionRate = metrics?.averageRatePerHour.map {
             String(format: "%.1f %%/h (media)", $0)
         } ?? "–"
-
-        if let battery, !battery.isPluggedIn,
-           metrics?.hasEnoughRateData == true,
-           let depletion = metrics?.estimatedDepletionDate(batteryPercentage: battery.percentage) {
-            estimatedDepletionLabel = depletion.depletionEstimateFormatted
-        } else {
-            estimatedDepletionLabel = nil
-        }
 
         // Estado general
         powerModeState      = powerMode

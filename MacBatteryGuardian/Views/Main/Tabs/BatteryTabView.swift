@@ -41,18 +41,25 @@ struct BatteryTabView: View {
                     Group {
                         if vm.isCharging {
                             Label("Cargando · \(vm.timeToFullFormatted)", systemImage: "bolt.fill")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         } else if vm.isPluggedIn {
                             if vm.isFullyCharged || vm.percentage >= 99 {
                                 Label("Conectado — batería completa", systemImage: "bolt.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             } else {
                                 Label("Conectado al cargador — carga en pausa", systemImage: "bolt.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             }
                         } else {
-                            Label("Autonomía: \(vm.autonomyFormatted)", systemImage: "clock")
+                            BatteryAutonomySummaryView(
+                                autonomySentence: vm.autonomySentence,
+                                depletionSentence: vm.depletionSentence
+                            )
                         }
                     }
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
 
                     HStack(spacing: 20) {
                         DetailStatBlock(

@@ -29,6 +29,8 @@ final class BatteryViewModel: ObservableObject {
     @Published private(set) var rate3h: String = "–"
     @Published private(set) var trend: ConsumptionTrend = .unknown
     @Published private(set) var autonomyFormatted: String = "–"
+    @Published private(set) var autonomySentence: String? = nil
+    @Published private(set) var depletionSentence: String? = nil
     @Published private(set) var alertState: ConsumptionAlertState = .stable
     @Published private(set) var alertColor: Color = .green
 
@@ -90,9 +92,27 @@ final class BatteryViewModel: ObservableObject {
             alertState        = m.alertState
             alertColor        = .alertStateColor(m.alertState)
 
+            if !battery.isPluggedIn {
+                let minutes = m.estimatedAutonomyMinutes
+                    ?? battery.timeToEmptyMinutes.flatMap { $0 > 0 ? $0 : nil }
+                autonomySentence = minutes.map { Date.batteryAutonomySentence(minutes: $0) }
+                if m.hasEnoughRateData,
+                   let depletion = m.estimatedDepletionDate(batteryPercentage: battery.percentage) {
+                    depletionSentence = depletion.batteryDepletionSentence
+                } else {
+                    depletionSentence = nil
+                }
+            } else {
+                autonomySentence = nil
+                depletionSentence = nil
+            }
+
             if let rate = m.averageRatePerHour {
                 TimelineHistory.append(rate, to: &consumptionTimeline, maxPoints: maxTimelinePoints)
             }
+        } else {
+            autonomySentence = nil
+            depletionSentence = nil
         }
 
         TimelineHistory.append(Double(battery.percentage), to: &batteryTimeline, maxPoints: maxTimelinePoints)
