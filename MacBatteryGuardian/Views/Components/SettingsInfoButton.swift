@@ -1,5 +1,5 @@
 // SettingsInfoButton.swift
-// Icono (i) con explicación al pasar el cursor (popover + tooltip nativo).
+// Icono (i) con explicación al pasar el cursor (popover).
 
 import SwiftUI
 
@@ -22,8 +22,8 @@ struct SettingsInfoButton: View {
                     scheduleHide()
                 }
             }
-            .help(text)
             .accessibilityLabel("Más información")
+            .accessibilityHint(text)
             .popover(isPresented: $isVisible, arrowEdge: .trailing) {
                 Text(text)
                     .font(.callout)
