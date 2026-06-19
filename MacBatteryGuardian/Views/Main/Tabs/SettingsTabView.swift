@@ -6,7 +6,6 @@ import SwiftUI
 
 struct SettingsTabView: View {
 
-    // SettingsViewModel se inyecta como EnvironmentObject desde AppDelegate.openMainWindow()
     @EnvironmentObject private var vm: SettingsViewModel
     @State private var showResetAlert = false
 
@@ -15,72 +14,132 @@ struct SettingsTabView: View {
 
             // MARK: - General
             Section("General") {
-                Toggle("Iniciar al arrancar el sistema", isOn: $vm.launchAtLogin)
-                Toggle("Mostrar porcentaje en la barra de menú", isOn: $vm.showPercentageInMenuBar)
-                Toggle("Mostrar consumo medio (%/h) en la barra de menú", isOn: $vm.showConsumptionRateInMenuBar)
+                Toggle(isOn: $vm.launchAtLogin) {
+                    settingsLabel(
+                        "Iniciar al arrancar el sistema",
+                        help: "Registra MacBatteryGuardian para que se abra sola al iniciar sesión. "
+                            + "Permanece en la barra de menú; no aparece en el Dock."
+                    )
+                }
+                Toggle(isOn: $vm.showPercentageInMenuBar) {
+                    settingsLabel(
+                        "Mostrar porcentaje en la barra de menú",
+                        help: "Añade el nivel actual de batería (p. ej. 72 %) junto al icono de la app "
+                            + "en la barra superior."
+                    )
+                }
+                Toggle(isOn: $vm.showConsumptionRateInMenuBar) {
+                    settingsLabel(
+                        "Mostrar consumo medio (%/h) en la barra de menú",
+                        help: "Muestra cuántos puntos porcentuales de batería consumes de media por hora. "
+                            + "Solo aparece cuando hay datos suficientes para estimarlo."
+                    )
+                }
             }
 
             // MARK: - Monitorización
             Section("Monitorización") {
-                LabeledContent("Intervalo de monitorización") {
-                    Picker("", selection: $vm.monitoringIntervalSeconds) {
-                        Text("1 minuto").tag(60)
-                        Text("2 minutos").tag(120)
-                        Text("5 minutos (recomendado)").tag(300)
-                        Text("10 minutos").tag(600)
-                        Text("15 minutos").tag(900)
+                LabeledContent {
+                    settingsPicker {
+                        Picker("", selection: $vm.monitoringIntervalSeconds) {
+                            Text("1 minuto").tag(60)
+                            Text("2 minutos").tag(120)
+                            Text("5 minutos (recomendado)").tag(300)
+                            Text("10 minutos").tag(600)
+                            Text("15 minutos").tag(900)
+                        }
                     }
-                    .labelsHidden()
-                    .frame(width: 220)
+                } label: {
+                    settingsLabel(
+                        "Intervalo de monitorización",
+                        help: "Frecuencia con la que la app lee batería, CPU y memoria. "
+                            + "Intervalos más cortos rellenan antes las gráficas; los largos ahorran recursos."
+                    )
                 }
             }
 
             // MARK: - Notificaciones
             Section("Notificaciones") {
-                Toggle("Activar notificaciones", isOn: $vm.notificationsEnabled)
+                Toggle(isOn: $vm.notificationsEnabled) {
+                    settingsLabel(
+                        "Activar notificaciones",
+                        help: "Muestra avisos del sistema cuando el consumo es anormal, hay un pico sostenido "
+                            + "o la app activa el Modo Bajo Consumo automáticamente."
+                    )
+                }
                 if vm.notificationsEnabled {
-                    LabeledContent("Cooldown entre notificaciones") {
-                        Picker("", selection: $vm.notificationCooldownMinutes) {
-                            Text("15 min").tag(15)
-                            Text("30 min (recomendado)").tag(30)
-                            Text("1 hora").tag(60)
-                            Text("2 horas").tag(120)
+                    LabeledContent {
+                        settingsPicker {
+                            Picker("", selection: $vm.notificationCooldownMinutes) {
+                                Text("15 min").tag(15)
+                                Text("30 min (recomendado)").tag(30)
+                                Text("1 hora").tag(60)
+                                Text("2 horas").tag(120)
+                            }
                         }
-                        .labelsHidden()
-                        .frame(width: 200)
+                    } label: {
+                        settingsLabel(
+                            "Cooldown entre notificaciones",
+                            help: "Tiempo mínimo entre dos avisos del mismo tipo. Evita repetir la misma "
+                                + "alerta si el consumo sigue alto durante un rato."
+                        )
                     }
                 }
             }
 
             // MARK: - Modo Bajo Consumo
             Section("Modo Bajo Consumo automático") {
-                Toggle("Activar automáticamente según consumo", isOn: $vm.automaticLowPowerModeEnabled)
+                Toggle(isOn: $vm.automaticLowPowerModeEnabled) {
+                    settingsLabel(
+                        "Activar automáticamente según consumo",
+                        help: "Permite que MacBatteryGuardian active el Modo Bajo Consumo de macOS cuando "
+                            + "detecta un consumo energético elevado de forma sostenida."
+                    )
+                }
                 if vm.automaticLowPowerModeEnabled {
-                    LabeledContent("Activar tras consumo crítico sostenido") {
-                        Picker("", selection: $vm.lowPowerModeActivationDelayMinutes) {
-                            Text("30 min").tag(30)
-                            Text("1 hora (recomendado)").tag(60)
-                            Text("2 horas").tag(120)
+                    LabeledContent {
+                        settingsPicker {
+                            Picker("", selection: $vm.lowPowerModeActivationDelayMinutes) {
+                                Text("30 min").tag(30)
+                                Text("1 hora (recomendado)").tag(60)
+                                Text("2 horas").tag(120)
+                            }
                         }
-                        .labelsHidden()
-                        .frame(width: 200)
+                    } label: {
+                        settingsLabel(
+                            "Activar tras consumo crítico sostenido",
+                            help: "Cuánto tiempo debe mantenerse el consumo en nivel crítico antes de "
+                                + "activar el Modo Bajo Consumo. Así se evitan activaciones por picos breves."
+                        )
                     }
-                    Toggle("Desactivar al conectar el cargador", isOn: $vm.deactivateLowPowerOnCharge)
+                    Toggle(isOn: $vm.deactivateLowPowerOnCharge) {
+                        settingsLabel(
+                            "Desactivar al conectar el cargador",
+                            help: "Al enchufar el Mac, la app desactiva el Modo Bajo Consumo que hubiera "
+                                + "activado ella automáticamente."
+                        )
+                    }
                 }
             }
 
             // MARK: - Historial
             Section("Historial") {
-                LabeledContent("Conservar historial") {
-                    Picker("", selection: $vm.historyRetentionDays) {
-                        Text("7 días").tag(7)
-                        Text("15 días").tag(15)
-                        Text("30 días (recomendado)").tag(30)
-                        Text("60 días").tag(60)
-                        Text("90 días").tag(90)
+                LabeledContent {
+                    settingsPicker {
+                        Picker("", selection: $vm.historyRetentionDays) {
+                            Text("7 días").tag(7)
+                            Text("15 días").tag(15)
+                            Text("30 días (recomendado)").tag(30)
+                            Text("60 días").tag(60)
+                            Text("90 días").tag(90)
+                        }
                     }
-                    .labelsHidden()
-                    .frame(width: 200)
+                } label: {
+                    settingsLabel(
+                        "Conservar historial",
+                        help: "Días que se conservan en disco los registros de batería, CPU y consumo. "
+                            + "Los datos más antiguos se eliminan solos; no afecta al funcionamiento diario."
+                    )
                 }
             }
 
@@ -89,8 +148,14 @@ struct SettingsTabView: View {
                 Button(role: .destructive) {
                     showResetAlert = true
                 } label: {
-                    Label("Restablecer configuración por defecto", systemImage: "arrow.counterclockwise")
+                    HStack(spacing: 6) {
+                        Label("Restablecer configuración por defecto", systemImage: "arrow.counterclockwise")
+                        Image(systemName: "info.circle")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
                 }
+                .help("Restaura todos los ajustes de esta pestaña a los valores iniciales. No borra el historial guardado.")
             }
         }
         .formStyle(.grouped)
@@ -105,5 +170,28 @@ struct SettingsTabView: View {
         } message: {
             Text("Se restaurarán todos los ajustes a sus valores por defecto.")
         }
+    }
+
+    /// Etiqueta con icono ⓘ y tooltip al pasar el cursor.
+    private func settingsLabel(_ title: String, help helpText: String) -> some View {
+        HStack(spacing: 5) {
+            Text(title)
+            Image(systemName: "info.circle")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+        .help(helpText)
+    }
+
+    /// Picker alineado al borde derecho, como los toggles del Form.
+    @ViewBuilder
+    private func settingsPicker<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        HStack {
+            Spacer(minLength: 0)
+            content()
+                .labelsHidden()
+                .fixedSize()
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
