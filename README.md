@@ -200,30 +200,52 @@ Al cerrar la ventana principal (✕), la app **sigue en la barra de menú** moni
 
 ## Descargar e instalar
 
-### Opción A — Compilar tú mismo (recomendado por ahora)
+### Opción A — DMG (recomendado)
 
-Actualmente la forma de obtener la app es **compilar desde el código fuente**. Sigue la guía de [Compilar desde código fuente](#compilar-desde-código-fuente) más abajo.
+1. Ve a **[Releases](https://github.com/pCresp0/MacBatteryGuardian/releases)** y descarga el `.dmg` más reciente.
+2. Abre el DMG y **arrastra MacBatteryGuardian a Aplicaciones**.
+3. Abre la app desde **Aplicaciones** o Spotlight (`⌘Espacio` → "MacBatteryGuardian").
+4. Si macOS la bloquea la primera vez: **clic derecho → Abrir → Abrir** (solo la primera vez, si no está notarizada).
 
-Tras compilar, arrastra `MacBatteryGuardian.app` a **Aplicaciones**:
+> La app **no aparece en el Dock**. Busca el icono en la **barra de menú superior**.
+
+### Opción B — Compilar tú mismo
+
+Si prefieres generar el DMG en tu Mac:
 
 ```bash
-# Ruta típica tras compilar en Debug:
-cp -R ~/Library/Developer/Xcode/DerivedData/MacBatteryGuardian-*/Build/Products/Debug/MacBatteryGuardian.app /Applications/
+git clone https://github.com/pCresp0/MacBatteryGuardian.git
+cd MacBatteryGuardian
+chmod +x scripts/build-dmg.sh
+./scripts/build-dmg.sh
 ```
 
-Luego ábrela desde **Aplicaciones** o con Spotlight (`⌘Espacio` → "MacBatteryGuardian").
+El DMG quedará en `dist/MacBatteryGuardian-1.0.0.dmg`.
 
-> La primera ejecución desde una app descargada/compilada puede requerir clic derecho → **Abrir** si macOS la bloquea por no estar notarizada.
+#### Distribución pública (sin avisos de Gatekeeper)
 
-### Opción B — Releases (próximamente)
+Para que cualquier usuario pueda instalar sin "clic derecho → Abrir":
 
-Cuando publique releases en GitHub, podrás descargar un `.app` o `.dmg` desde:
+1. Cuenta **Apple Developer** (99 €/año).
+2. Certificado **Developer ID Application** en [developer.apple.com](https://developer.apple.com).
+3. Generar y notarizar:
 
-👉 **[github.com/pCresp0/MacBatteryGuardian/releases](https://github.com/pCresp0/MacBatteryGuardian/releases)**
+```bash
+SIGN_IDENTITY="Developer ID Application: Tu Nombre (TEAMID)" \
+NOTARIZE=1 \
+APPLE_ID=tu@email.com \
+APP_PASSWORD=xxxx-xxxx-xxxx-xxxx \
+TEAM_ID=7699A9R89R \
+./scripts/build-dmg.sh
+```
+
+(`APP_PASSWORD` = contraseña específica de app en appleid.apple.com)
+
+4. Subir el `.dmg` a **GitHub Releases** para que la gente lo descargue.
 
 ---
 
-## Compilar desde código fuente
+## Compilar desde código fuente (desarrollo)
 
 ### Requisitos de desarrollo
 
@@ -345,7 +367,8 @@ Persistencia local (JSON en Application Support)
 ## Roadmap
 
 - [x] Capturas de pantalla en el README
-- [ ] Release `.dmg` en GitHub Releases
+- [x] Script de empaquetado DMG (`scripts/build-dmg.sh`)
+- [ ] Primer release en GitHub con DMG notarizado
 - [ ] Tests unitarios
 - [ ] Localización EN
 - [ ] Soporte Intel si hay demanda

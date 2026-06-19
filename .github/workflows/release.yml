@@ -1,0 +1,36 @@
+# Genera un DMG en cada release de GitHub.
+# Secrets opcionales para firma/notarización:
+#   DEVELOPER_ID_APPLICATION, APPLE_ID, APPLE_APP_PASSWORD, APPLE_TEAM_ID
+
+name: Release DMG
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-dmg:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Compilar y crear DMG
+        env:
+          SIGN_IDENTITY: ${{ secrets.DEVELOPER_ID_APPLICATION }}
+          NOTARIZE: ${{ secrets.APPLE_ID != '' && '1' || '0' }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          chmod +x scripts/build-dmg.sh
+          ./scripts/build-dmg.sh
+
+      - name: Subir DMG al release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.dmg

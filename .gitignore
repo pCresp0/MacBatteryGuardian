@@ -4,6 +4,8 @@
 *.xcuserstate
 DerivedData/
 build/
+dist/
+*.dmg
 *.moved-aside
 *.pbxuser
 !default.pbxuser
