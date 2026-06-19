@@ -12,6 +12,11 @@
   <img src="https://img.shields.io/badge/Swift-6.0-F05138?style=flat-square&logo=swift&logoColor=white" alt="Swift 6"/>
   <img src="https://img.shields.io/badge/SwiftUI-✓-007AFF?style=flat-square" alt="SwiftUI"/>
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"/>
+  <a href="https://github.com/pCresp0/MacBatteryGuardian/releases/latest"><img src="https://img.shields.io/github/v/release/pCresp0/MacBatteryGuardian?style=flat-square&label=Descargar%20DMG" alt="Latest release"/></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/pCresp0/MacBatteryGuardian/releases/latest"><strong>⬇ Descargar MacBatteryGuardian v1.0.0 (DMG)</strong></a>
 </p>
 
 <p align="center">
@@ -28,9 +33,9 @@
 
 - [Qué es](#qué-es)
 - [Requisitos del sistema](#requisitos-del-sistema)
+- [Descargar e instalar](#descargar-e-instalar)
 - [Capturas de pantalla](#capturas-de-pantalla)
 - [Cómo usar la app](#cómo-usar-la-app)
-- [Descargar e instalar](#descargar-e-instalar)
 - [Compilar desde código fuente](#compilar-desde-código-fuente)
 - [Características](#características)
 - [Arquitectura](#arquitectura)
@@ -200,73 +205,100 @@ Al cerrar la ventana principal (✕), la app **sigue en la barra de menú** moni
 
 ## Descargar e instalar
 
-### Sin cuenta Apple Developer (99 €) — para ti y tus compañeros
+### Descarga directa (recomendado)
 
-**No necesitas pagar Apple Developer** para usar la app entre un grupo pequeño. Tienes dos caminos:
+👉 **[Descargar la última versión (DMG)](https://github.com/pCresp0/MacBatteryGuardian/releases/latest)**
 
-#### Camino 1 — Descargar el DMG y abrirlo una vez (más fácil para quien no programa)
+Versión actual: **[v1.0.0](https://github.com/pCresp0/MacBatteryGuardian/releases/tag/v1.0.0)** · Archivo: `MacBatteryGuardian-1.0.0.dmg`
 
-1. Descarga el `.dmg` desde **[Releases](https://github.com/pCresp0/MacBatteryGuardian/releases)** (o que te lo pase alguien del equipo).
-2. Abre el DMG y arrastra **MacBatteryGuardian** a **Aplicaciones**.
-3. La **primera vez**, macOS dirá que no puede verificar al desarrollador. Es normal sin cuenta de pago:
-   - **Clic derecho** (o Control + clic) sobre la app → **Abrir** → **Abrir** otra vez.
-   - Solo hace falta **una vez**; después abre con doble clic normal.
-4. Busca el icono en la **barra de menú superior** (no está en el Dock).
+**Requisitos:** macOS **14.0 (Sonoma)** o superior · Mac **Apple Silicon** (M1/M2/M3/M4…)
 
-> Alternativa en terminal (quita el aviso de “descargado de internet”):
-> ```bash
-> xattr -cr /Applications/MacBatteryGuardian.app
-> open /Applications/MacBatteryGuardian.app
-> ```
+---
 
-#### Camino 2 — Compilar cada uno en su Mac (gratis, con Apple ID normal)
+### Instalación paso a paso
 
-Cualquier compañero puede compilar la app **sin pagar nada** con:
+1. **Descarga** el `.dmg` desde [Releases](https://github.com/pCresp0/MacBatteryGuardian/releases/latest).
+2. **Abre** el DMG (doble clic) y **arrastra** `MacBatteryGuardian` a la carpeta **Aplicaciones**.
+3. **Abre la app** desde Aplicaciones o Spotlight (`⌘Espacio` → "MacBatteryGuardian").
 
-- **Xcode** (gratis en App Store)
-- Su **Apple ID personal** (iCloud, el de siempre) — **no** hace falta Apple Developer Program
+---
+
+### ⚠️ macOS bloquea la app la primera vez (es normal)
+
+Al no estar notarizada con cuenta de Apple Developer de pago, macOS mostrará un aviso del estilo:
+
+> *«MacBatteryGuardian» no se puede abrir porque no se puede verificar el desarrollador.*  
+> o *Apple no puede comprobar que esta app esté libre de malware.*
+
+**No pasa nada.** La app es open source y no tiene telemetría. Elige **una** de estas opciones:
+
+#### Opción A — Clic derecho (la más fácil)
+
+1. Ve a **Aplicaciones** en Finder.
+2. **Clic derecho** (o Control + clic) sobre **MacBatteryGuardian**.
+3. Pulsa **Abrir**.
+4. En el diálogo, pulsa **Abrir** otra vez.
+5. ✅ Solo hace falta **una vez**; después abre con doble clic normal.
+
+#### Opción B — Ajustes del sistema
+
+Si ya intentaste abrirla con doble clic y macOS la bloqueó:
+
+1. Abre **Ajustes del sistema** ( ⚙️ ).
+2. Ve a **Privacidad y seguridad**.
+3. Baja hasta **Seguridad** — verás un mensaje tipo *«MacBatteryGuardian» fue bloqueada…*.
+4. Pulsa **Abrir igualmente** (o **Allow Anyway** en inglés).
+5. Confirma con tu contraseña o Touch ID si te lo pide.
+6. Vuelve a abrir la app desde Aplicaciones.
+
+#### Opción C — Terminal (avanzado)
+
+```bash
+xattr -cr /Applications/MacBatteryGuardian.app
+open /Applications/MacBatteryGuardian.app
+```
+
+---
+
+### ¿Dónde está la app?
+
+MacBatteryGuardian **no aparece en el Dock**. Tras abrirla, busca el **icono en la barra de menú superior** (junto a Wi‑Fi, batería del sistema, etc.).
+
+---
+
+### Otras formas de obtenerla
+
+#### Compilar tú mismo (gratis, sin pagar Apple Developer)
+
+Con **Xcode** (App Store) y tu **Apple ID personal** (iCloud):
 
 ```bash
 git clone https://github.com/pCresp0/MacBatteryGuardian.git
 cd MacBatteryGuardian
-brew install xcodegen    # solo la primera vez
+brew install xcodegen
 xcodegen generate
 open MacBatteryGuardian.xcodeproj
 ```
 
-En Xcode → **Signing & Capabilities** → elige tu **Personal Team** (Apple ID gratuito) en ambos targets → **`⌘R`**.
+En Xcode → **Signing & Capabilities** → elige tu **Personal Team** en ambos targets → **`⌘R`**.
 
-La app quedará firmada para **su** Mac y funcionará sin avisos raros.
-
----
-
-### Opción A — DMG (recomendado si alguien del equipo lo genera)
-
-Quien tenga Xcode puede crear el DMG para el resto:
+#### Generar el DMG (para quien mantiene el proyecto)
 
 ```bash
-git clone https://github.com/pCresp0/MacBatteryGuardian.git
-cd MacBatteryGuardian
 ./scripts/build-dmg.sh
 # → dist/MacBatteryGuardian-1.0.0.dmg
 ```
 
-Sube ese archivo a **GitHub Releases** o pásalo por Drive/Slack. Los compañeros siguen el **Camino 1** arriba.
-
-> La app **no aparece en el Dock**. Busca el icono en la **barra de menú superior**.
-
 ---
 
-### ¿Y la cuenta de Apple Developer de pago?
+### ¿Hace falta pagar Apple Developer (99 €)?
 
-Solo la necesitas si quieres que **cualquier desconocido** en internet instale la app **sin** el paso de “clic derecho → Abrir”. Para un equipo, amigos o uso interno, **no hace falta**.
+**No**, para ti, compañeros o uso interno. El aviso de seguridad de macOS es solo la **primera vez**.
+
+Solo necesitas la cuenta de pago si quieres que **cualquier desconocido** instale sin ese paso (notarización).
 
 <details>
 <summary>Distribución pública sin avisos (opcional, requiere Apple Developer)</summary>
-
-1. Cuenta **Apple Developer** (99 €/año).
-2. Certificado **Developer ID Application**.
-3. Generar y notarizar:
 
 ```bash
 SIGN_IDENTITY="Developer ID Application: Tu Nombre (TEAMID)" \
@@ -404,7 +436,7 @@ Persistencia local (JSON en Application Support)
 
 - [x] Capturas de pantalla en el README
 - [x] Script de empaquetado DMG (`scripts/build-dmg.sh`)
-- [ ] Primer release en GitHub con DMG notarizado
+- [ ] ~~Primer release en GitHub con DMG notarizado~~ → [v1.0.0 publicado](https://github.com/pCresp0/MacBatteryGuardian/releases/tag/v1.0.0)
 - [ ] Tests unitarios
 - [ ] Localización EN
 - [ ] Soporte Intel si hay demanda
