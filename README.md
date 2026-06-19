@@ -2,7 +2,8 @@
 
 <p align="center">
   <strong>Monitor de batería y sistema para macOS — nativo, ligero y en la barra de menú.</strong><br>
-  <sub>Apple Silicon · Swift 6 · SwiftUI · Sin telemetría · 100 % local</sub>
+  <sub>Apple Silicon · Swift 6 · SwiftUI · Sin telemetría · 100 % local</sub><br>
+  <sub>Desarrollado por <a href="https://github.com/pCresp0">Pablo Crespo Bellido</a></sub>
 </p>
 
 <p align="center">
@@ -148,7 +149,7 @@ MacBatteryGuardian/
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU_USUARIO/MacBatteryGuardian.git
+git clone https://github.com/pCresp0/MacBatteryGuardian.git
 cd MacBatteryGuardian
 ```
 
@@ -252,7 +253,15 @@ MIT — ver [LICENSE](LICENSE) para más detalles.
 
 ## Autor
 
+**Pablo Crespo Bellido**
+
 Desarrollado con Swift nativo para macOS.
+
+<p align="center">
+  <a href="https://github.com/pCresp0">GitHub — más proyectos</a>
+  &nbsp;·&nbsp;
+  <a href="https://www.linkedin.com/in/pablocrespobellido">LinkedIn</a>
+</p>
 
 <p align="center">
   <sub>Si te resulta útil, considera darle una ⭐ al repositorio.</sub>
