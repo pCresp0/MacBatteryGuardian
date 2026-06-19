@@ -200,34 +200,72 @@ Al cerrar la ventana principal (✕), la app **sigue en la barra de menú** moni
 
 ## Descargar e instalar
 
-### Opción A — DMG (recomendado)
+### Sin cuenta Apple Developer (99 €) — para ti y tus compañeros
 
-1. Ve a **[Releases](https://github.com/pCresp0/MacBatteryGuardian/releases)** y descarga el `.dmg` más reciente.
-2. Abre el DMG y **arrastra MacBatteryGuardian a Aplicaciones**.
-3. Abre la app desde **Aplicaciones** o Spotlight (`⌘Espacio` → "MacBatteryGuardian").
-4. Si macOS la bloquea la primera vez: **clic derecho → Abrir → Abrir** (solo la primera vez, si no está notarizada).
+**No necesitas pagar Apple Developer** para usar la app entre un grupo pequeño. Tienes dos caminos:
 
-> La app **no aparece en el Dock**. Busca el icono en la **barra de menú superior**.
+#### Camino 1 — Descargar el DMG y abrirlo una vez (más fácil para quien no programa)
 
-### Opción B — Compilar tú mismo
+1. Descarga el `.dmg` desde **[Releases](https://github.com/pCresp0/MacBatteryGuardian/releases)** (o que te lo pase alguien del equipo).
+2. Abre el DMG y arrastra **MacBatteryGuardian** a **Aplicaciones**.
+3. La **primera vez**, macOS dirá que no puede verificar al desarrollador. Es normal sin cuenta de pago:
+   - **Clic derecho** (o Control + clic) sobre la app → **Abrir** → **Abrir** otra vez.
+   - Solo hace falta **una vez**; después abre con doble clic normal.
+4. Busca el icono en la **barra de menú superior** (no está en el Dock).
 
-Si prefieres generar el DMG en tu Mac:
+> Alternativa en terminal (quita el aviso de “descargado de internet”):
+> ```bash
+> xattr -cr /Applications/MacBatteryGuardian.app
+> open /Applications/MacBatteryGuardian.app
+> ```
+
+#### Camino 2 — Compilar cada uno en su Mac (gratis, con Apple ID normal)
+
+Cualquier compañero puede compilar la app **sin pagar nada** con:
+
+- **Xcode** (gratis en App Store)
+- Su **Apple ID personal** (iCloud, el de siempre) — **no** hace falta Apple Developer Program
 
 ```bash
 git clone https://github.com/pCresp0/MacBatteryGuardian.git
 cd MacBatteryGuardian
-chmod +x scripts/build-dmg.sh
-./scripts/build-dmg.sh
+brew install xcodegen    # solo la primera vez
+xcodegen generate
+open MacBatteryGuardian.xcodeproj
 ```
 
-El DMG quedará en `dist/MacBatteryGuardian-1.0.0.dmg`.
+En Xcode → **Signing & Capabilities** → elige tu **Personal Team** (Apple ID gratuito) en ambos targets → **`⌘R`**.
 
-#### Distribución pública (sin avisos de Gatekeeper)
+La app quedará firmada para **su** Mac y funcionará sin avisos raros.
 
-Para que cualquier usuario pueda instalar sin "clic derecho → Abrir":
+---
+
+### Opción A — DMG (recomendado si alguien del equipo lo genera)
+
+Quien tenga Xcode puede crear el DMG para el resto:
+
+```bash
+git clone https://github.com/pCresp0/MacBatteryGuardian.git
+cd MacBatteryGuardian
+./scripts/build-dmg.sh
+# → dist/MacBatteryGuardian-1.0.0.dmg
+```
+
+Sube ese archivo a **GitHub Releases** o pásalo por Drive/Slack. Los compañeros siguen el **Camino 1** arriba.
+
+> La app **no aparece en el Dock**. Busca el icono en la **barra de menú superior**.
+
+---
+
+### ¿Y la cuenta de Apple Developer de pago?
+
+Solo la necesitas si quieres que **cualquier desconocido** en internet instale la app **sin** el paso de “clic derecho → Abrir”. Para un equipo, amigos o uso interno, **no hace falta**.
+
+<details>
+<summary>Distribución pública sin avisos (opcional, requiere Apple Developer)</summary>
 
 1. Cuenta **Apple Developer** (99 €/año).
-2. Certificado **Developer ID Application** en [developer.apple.com](https://developer.apple.com).
+2. Certificado **Developer ID Application**.
 3. Generar y notarizar:
 
 ```bash
@@ -235,13 +273,11 @@ SIGN_IDENTITY="Developer ID Application: Tu Nombre (TEAMID)" \
 NOTARIZE=1 \
 APPLE_ID=tu@email.com \
 APP_PASSWORD=xxxx-xxxx-xxxx-xxxx \
-TEAM_ID=7699A9R89R \
+TEAM_ID=TU_TEAM_ID \
 ./scripts/build-dmg.sh
 ```
 
-(`APP_PASSWORD` = contraseña específica de app en appleid.apple.com)
-
-4. Subir el `.dmg` a **GitHub Releases** para que la gente lo descargue.
+</details>
 
 ---
 
