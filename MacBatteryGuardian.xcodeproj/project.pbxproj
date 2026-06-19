@@ -30,6 +30,7 @@
 		43E80E168B728075AA82BA1D /* SysctlBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38941A87D45F49F3FA9E476B /* SysctlBridge.swift */; };
 		4668A673690358D29D04EDD2 /* PowerMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C336A9D4102B7B1002E819 /* PowerMode.swift */; };
 		47ECCFBAD7C05885B1548A26 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5472C47895473E4CD6F413A4 /* PersistenceService.swift */; };
+		4975730FAC0A2609AFF3F8BB /* SettingsInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836102B2820119DB9D4D583F /* SettingsInfoButton.swift */; };
 		4D69188E896206733B0B24AE /* CPUViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C83F67455C5FFC98B41EAA /* CPUViewModel.swift */; };
 		4D883220CAA6EF733A44F1E5 /* BatteryAutonomySummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA8284E5D3560DD350B0127 /* BatteryAutonomySummaryView.swift */; };
 		54F346403F69753C10AD6CD2 /* ThermalGaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2C56A5837BD9CE775EFAED /* ThermalGaugeView.swift */; };
@@ -157,6 +158,7 @@
 		75D3399AC2563EE1076447B0 /* MainWindowSizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowSizing.swift; sourceTree = "<group>"; };
 		7FA8284E5D3560DD350B0127 /* BatteryAutonomySummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryAutonomySummaryView.swift; sourceTree = "<group>"; };
 		824DE377A3EC085BB5C0A925 /* EnergyMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnergyMetrics.swift; sourceTree = "<group>"; };
+		836102B2820119DB9D4D583F /* SettingsInfoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsInfoButton.swift; sourceTree = "<group>"; };
 		84E051C13320A7F727585B2B /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		8CF3629CBD96F376B46AD504 /* ProcessRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRowView.swift; sourceTree = "<group>"; };
 		8DB2B3F3169EF935B7C0992B /* TimelineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineChartView.swift; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				52F07B236FEE704DBA605E5A /* MetricCardView.swift */,
 				8CF3629CBD96F376B46AD504 /* ProcessRowView.swift */,
 				4558C2DE7B30A9BB9C820230 /* RecommendationCardView.swift */,
+				836102B2820119DB9D4D583F /* SettingsInfoButton.swift */,
 				CB2C56A5837BD9CE775EFAED /* ThermalGaugeView.swift */,
 				8DB2B3F3169EF935B7C0992B /* TimelineChartView.swift */,
 				391889E06482F117C9C0C44E /* TrendChartView.swift */,
@@ -586,6 +589,7 @@
 				669608B5E8CEA690D860B073 /* ProcessRowView.swift in Sources */,
 				21EB1654B88A339B2F06C256 /* ProcessSnapshot.swift in Sources */,
 				FE8B9C94C56FCF4C64774AF9 /* RecommendationCardView.swift in Sources */,
+				4975730FAC0A2609AFF3F8BB /* SettingsInfoButton.swift in Sources */,
 				E6C20DCB8217F4F642BD72CE /* SettingsRepository.swift in Sources */,
 				B7A4DDC44293CEE73CF2457A /* SettingsTabView.swift in Sources */,
 				ACC5D33A19ED6F9DAC961F50 /* SettingsViewModel.swift in Sources */,
