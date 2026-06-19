@@ -146,10 +146,10 @@ Uso en GB, presión de memoria, evolución temporal y **desglose segmentado** al
 
 ### Pestaña Ajustes
 
-Configuración completa: inicio automático, barra de menú, intervalo de monitorización, notificaciones, **Modo Bajo Consumo automático** (activación por consumo crítico y desactivación al enchufar) y retención del historial.
+Configuración completa: inicio automático, barra de menú, intervalo de monitorización, notificaciones, Modo Bajo Consumo automático y retención del historial.
 
 <p align="center">
-  <img src="docs/screenshots/settings.png" alt="Ajustes — Modo Bajo Consumo automático" width="520"/>
+  <img src="docs/screenshots/settings.png" alt="Pestaña Ajustes" width="720"/>
 </p>
 
 > También disponibles: **Histórico** (gráficas de días/semanas) y **Acerca de** (autor, licencia MIT y enlaces al repositorio).
