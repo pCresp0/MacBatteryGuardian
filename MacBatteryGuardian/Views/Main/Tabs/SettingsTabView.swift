@@ -28,8 +28,10 @@ struct SettingsTabView: View {
                 settingsToggle(
                     "Mostrar consumo medio (%/h) en la barra de menú",
                     isOn: $vm.showConsumptionRateInMenuBar,
-                    help: "Muestra cuántos puntos porcentuales de batería consumes de media por hora. "
-                        + "Solo aparece cuando hay datos suficientes para estimarlo."
+                    help: "Muestra en la barra superior cuánta batería consumes de media por hora. "
+                        + "Es la media de las ventanas de 15 min, 30 min, 1 h y 3 h que ya tengan datos "
+                        + "(no solo la última hora). El color indica el estado: verde normal, amarillo/naranja "
+                        + "elevado, rojo muy alto. Solo en batería; desaparece al enchufar."
                 )
             }
 

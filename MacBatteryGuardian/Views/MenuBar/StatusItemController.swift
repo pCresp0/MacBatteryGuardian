@@ -63,17 +63,18 @@ final class StatusItemController: NSObject {
 
     // MARK: - Observación del ViewModel
 
+    private var displayedTitle: String = ""
+    private var displayedTitleColor: Color = .primary
+
     private func observeViewModel() {
-        viewModel.$title
+        Publishers.CombineLatest(viewModel.$title, viewModel.$titleColor)
             .receive(on: RunLoop.main)
-            .sink { [weak self] title in
-                self?.updateButtonTitle(title)
+            .sink { [weak self] title, color in
+                self?.displayedTitle = title
+                self?.displayedTitleColor = color
+                self?.applyButtonTitle()
             }
             .store(in: &cancellables)
-
-        // No sobreescribimos contentTintColor: nil deja que el sistema use el color
-        // correcto del menubar (blanco en dark mode, negro en light mode).
-        // La alerta de estado sí puede cambiar color (updateButtonAppearance).
 
         viewModel.$alertState
             .receive(on: RunLoop.main)
@@ -83,16 +84,22 @@ final class StatusItemController: NSObject {
             .store(in: &cancellables)
     }
 
-    private func updateButtonTitle(_ title: String) {
+    private func applyButtonTitle() {
         guard let button = statusItem.button else { return }
+        let title = displayedTitle
         let hasMetrics = !title.isEmpty
         statusItem.length = hasMetrics ? NSStatusItem.variableLength : 28
         if hasMetrics {
             button.imagePosition = .imageLeading
-            button.title = " \(title)"
-            button.font = NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium)
+            let text = title.hasPrefix(" ") ? title : " \(title)"
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium),
+                .foregroundColor: NSColor(displayedTitleColor)
+            ]
+            button.attributedTitle = NSAttributedString(string: text, attributes: attributes)
         } else {
             button.imagePosition = .imageOnly
+            button.attributedTitle = NSAttributedString()
             button.title = ""
         }
     }
